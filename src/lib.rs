@@ -1,2 +1,2 @@
-mod nn;
+pub mod nn;
 
