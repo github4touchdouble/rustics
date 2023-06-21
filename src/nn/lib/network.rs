@@ -1,6 +1,6 @@
 use std::arch::x86_64::_xgetbv;
-use crate::lib::activations::Activation;
-use crate::lib::matrix::Matrix;
+use crate::nn::lib::activations::Activation;
+use crate::nn::lib::matrix::Matrix;
 
 pub struct Network<'a> {
     layers: Vec<usize>,
