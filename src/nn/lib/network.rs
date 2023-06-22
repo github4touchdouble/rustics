@@ -1,6 +1,10 @@
 use std::arch::x86_64::_xgetbv;
+use std::fs::File;
+use std::io::Write;
 use crate::nn::lib::activations::Activation;
 use crate::nn::lib::matrix::Matrix;
+use serde::{Deserialize, Serialize};
+use serde_json::{from_str, json};
 
 pub struct Network<'a> {
     layers: Vec<usize>,
@@ -79,5 +83,16 @@ impl Network<'_> {
                 self.back_propagate(outputs, targets[j].clone());
             }
         }
+    }
+
+    pub fn save(&mut self, file_path: String) {
+        let mut file = File::create(file_path).expect("Unable to touch save file");
+
+        file.write_all(
+            json!({
+				"weights": self.weights.clone().into_iter().map(|matrix| matrix.data).collect::<Vec<Vec<Vec<f64>>>>(),
+				"biases": self.biases.clone().into_iter().map(|matrix| matrix.data).collect::<Vec<Vec<Vec<f64>>>>()
+			}).to_string().as_bytes(),
+        ).expect("Unable to write to save file");
     }
 }
