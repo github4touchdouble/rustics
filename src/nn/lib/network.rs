@@ -1,10 +1,18 @@
 use std::arch::x86_64::_xgetbv;
 use std::fs::File;
-use std::io::Write;
+use std::io::{Read, Write};
 use crate::nn::lib::activations::Activation;
 use crate::nn::lib::matrix::Matrix;
 use serde::{Deserialize, Serialize};
 use serde_json::{from_str, json};
+
+#[derive(Serialize, Deserialize)]
+struct SaveData {
+    weights: Vec<Vec<Vec<f64>>>,
+    biases: Vec<Vec<Vec<f64>>>,
+}
+
+
 
 pub struct Network<'a> {
     layers: Vec<usize>,
@@ -94,5 +102,26 @@ impl Network<'_> {
 				"biases": self.biases.clone().into_iter().map(|matrix| matrix.data).collect::<Vec<Vec<Vec<f64>>>>()
 			}).to_string().as_bytes(),
         ).expect("Unable to write to save file");
+    }
+
+    pub fn load(&mut self, file_path: String) {
+        let mut file = File::open(file_path).expect("Unable to touch save file");
+        let mut buffer = String::new();
+
+        file.read_to_string(&mut buffer).expect("Unable to read save file");
+
+        let save_data: SaveData = from_str(&buffer).expect("Unable to serialize save data");
+
+        let mut weights = vec![];
+        let mut biases = vec![];
+
+        for i in 0..self.layers.len()-1{
+            weights.push(Matrix::from(save_data.weights[i].clone()));
+            biases.push(Matrix::from(save_data.biases[i].clone()));
+
+        }
+
+        self.weights = weights;
+        self.biases = biases;
     }
 }
