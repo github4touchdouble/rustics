@@ -53,19 +53,25 @@ impl Fasta {
         Ok(res)
     }
 
-    pub fn search_header(&self, header: &str) -> Option<&Record> {
+    pub fn search_header(&self, header: &str) -> Option<Record> {
         for record in &self.nucleotides{
             if record.header == header {
-                return Some(record);
+                let mut bin = Record::new();
+                bin.header = record.header.clone();
+                bin.sequence = record.sequence.clone();
+                return Some(bin);
             }
         }
         None
     }
 
-    pub fn search_sequence(&self, sequence: &str) -> Option<&Record> {
+    pub fn search_sequence(&self, sequence: &str) -> Option<Record> {
         for record in &self.nucleotides{
             if record.sequence == sequence {
-                return Some(record);
+                let mut bin = Record::new();
+                bin.header = record.header.clone();
+                bin.sequence = record.sequence.clone();
+                return Some(bin);
             }
         }
         None
