@@ -1,6 +1,8 @@
+use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader};
+use crate::utils::btree::integrate_splits;
 
 
 pub struct Fasta {
@@ -80,6 +82,15 @@ impl Fasta {
         }
         count
     }
+
+    pub fn deep_split(&self) -> BTreeMap<char,u64> {
+        let mut res:BTreeMap<char,u64> = BTreeMap::new();
+        for rec in &self.nucleotides{
+            let mut split = rec.split();
+            res = integrate_splits(res,split);
+        }
+        res
+    }
 }
 
 
@@ -114,5 +125,14 @@ impl Record {
 
     pub fn count(&self) -> usize {
         *&self.sequence.len()
+    }
+
+    pub fn split(&self) -> BTreeMap<char,u64>{
+        let mut res:BTreeMap<char,u64> = BTreeMap::new();
+        for i in self.sequence.chars(){
+            let count = res.entry(i).or_insert(0);
+            *count += 1;
+        }
+        res
     }
 }
