@@ -6,7 +6,7 @@ use crate::utils::btree::integrate_splits;
 
 
 pub struct Fasta {
-    pub nucleotides: Vec<Record>,
+    pub nucleotides: Vec<FastaRecord>,
 }
 
 impl Fasta {
@@ -30,7 +30,7 @@ impl Fasta {
             //Check if current line is header or sequence
             if line.starts_with('>') {
                 if !cur_header.is_empty() {
-                    let mut record = Record::new();
+                    let mut record = FastaRecord::new();
                     record.header = cur_header.clone();
                     record.sequence = cur_sequence.clone();
                     res.nucleotides.push(record);
@@ -45,7 +45,7 @@ impl Fasta {
         }
         //last line reached
         if !cur_header.is_empty() {
-            let mut record = Record::new();
+            let mut record = FastaRecord::new();
             record.header = cur_header;
             record.sequence = cur_sequence;
             res.nucleotides.push(record);
@@ -53,10 +53,10 @@ impl Fasta {
         Ok(res)
     }
 
-    pub fn search_header(&self, header: &str) -> Option<Record> {
+    pub fn search_header(&self, header: &str) -> Option<FastaRecord> {
         for record in &self.nucleotides{
             if record.header == header {
-                let mut bin = Record::new();
+                let mut bin = FastaRecord::new();
                 bin.header = record.header.clone();
                 bin.sequence = record.sequence.clone();
                 return Some(bin);
@@ -65,10 +65,10 @@ impl Fasta {
         None
     }
 
-    pub fn search_sequence(&self, sequence: &str) -> Option<Record> {
+    pub fn search_sequence(&self, sequence: &str) -> Option<FastaRecord> {
         for record in &self.nucleotides{
             if record.sequence == sequence {
-                let mut bin = Record::new();
+                let mut bin = FastaRecord::new();
                 bin.header = record.header.clone();
                 bin.sequence = record.sequence.clone();
                 return Some(bin);
@@ -100,14 +100,14 @@ impl Fasta {
 }
 
 
-pub struct Record {
+pub struct FastaRecord {
     pub header: String,
     pub sequence: String,
 }
 
-impl Record {
-    pub fn new() -> Record {
-        Record {
+impl FastaRecord {
+    pub fn new() -> FastaRecord {
+        FastaRecord {
             header: String::new(),
             sequence: String::new(),
         }
