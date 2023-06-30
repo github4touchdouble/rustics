@@ -73,7 +73,7 @@ impl Fasta {
         *&self.nucleotides.len()
     }
 
-    pub fn count_amino_acids(&self) -> usize {
+    pub fn deep_count(&self) -> usize {
         let mut count:usize = 0;
         for rec in &self.nucleotides{
             count = count + rec.count().clone();
