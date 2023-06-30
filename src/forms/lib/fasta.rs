@@ -50,6 +50,36 @@ impl Fasta {
         }
         Ok(res)
     }
+
+    pub fn search_header(&self, header: &str) -> Option<&Record> {
+        for record in &self.nucleotides{
+            if record.header == header {
+                return Some(record);
+            }
+        }
+        None
+    }
+
+    pub fn search_sequence(&self, sequence: &str) -> Option<&Record> {
+        for record in &self.nucleotides{
+            if record.sequence == sequence {
+                return Some(record);
+            }
+        }
+        None
+    }
+
+    pub fn count(&self) -> usize {
+        *&self.nucleotides.len()
+    }
+
+    pub fn count_amino_acids(&self) -> usize {
+        let mut count:usize = 0;
+        for rec in &self.nucleotides{
+            count = count + rec.count().clone();
+        }
+        count
+    }
 }
 
 
@@ -80,5 +110,9 @@ impl Record {
 
     pub fn sequence(&self) -> &str {
         &self.header
+    }
+
+    pub fn count(&self) -> usize {
+        *&self.sequence.len()
     }
 }
