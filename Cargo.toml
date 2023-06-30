@@ -14,3 +14,4 @@ crate-type = ["dylib"]
 rand = "0.8.5"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_json = "1.0.97"
+csv = "1.2.2"

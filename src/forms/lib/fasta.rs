@@ -92,7 +92,7 @@ impl Fasta {
     pub fn deep_split(&self) -> BTreeMap<char,u64> {
         let mut res:BTreeMap<char,u64> = BTreeMap::new();
         for rec in &self.nucleotides{
-            let mut split = rec.split();
+            let split = rec.split();
             res = integrate_splits(res,split);
         }
         res
