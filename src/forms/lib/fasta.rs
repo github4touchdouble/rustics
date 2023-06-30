@@ -76,11 +76,11 @@ impl Record {
         self.sequence = sequence;
     }
 
-    pub fn get_header(&self) -> &str{
+    pub fn header(&self) -> &str{
         &self.header
     }
 
-    pub fn get_sequence(&self) -> &str{
+    pub fn sequence(&self) -> &str{
         &self.header
     }
 
