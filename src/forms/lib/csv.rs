@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::fs::File;
 use std::io::Read;
 use std::vec;
@@ -5,20 +6,44 @@ use csv::ReaderBuilder;
 
 #[derive(Clone)]
 pub struct Csv {
+    pub name: String,
     pub lines: Vec<CsvRecord>,
 }
+
+impl Eq for Csv {}
+
+impl PartialEq<Self> for Csv {
+    fn eq(&self, other: &Self) -> bool {
+        self.lines == other.lines
+    }
+}
+
+impl PartialOrd<Self> for Csv {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.lines.partial_cmp(&other.lines)
+    }
+}
+
+impl Ord for Csv {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.lines.cmp(&other.lines)
+    }
+}
+
 
 impl Csv {
     pub fn new() -> Csv {
         Csv {
+            name:String::new(),
             lines: vec![],
         }
     }
 
-    pub fn file_read_in(file_path: &str) -> Result<Self, std::io::Error> {
+    pub fn file_read_in(name: &str, file_path: &str) -> Result<Self, std::io::Error> {
         let mut file = File::open(file_path)?;
         let mut contents = String::new();
         let mut res = Csv::new();
+        res.name = name.to_string();
         file.read_to_string(&mut contents)?;
         let mut reader = ReaderBuilder::new().has_headers(false).from_reader(contents.as_bytes());
 
@@ -45,12 +70,13 @@ impl Csv {
         }
 
         Csv {
+            name: self.name.clone(),
             lines: bin,
         }
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct CsvRecord {
     pub rows: Vec<String>,
 }
