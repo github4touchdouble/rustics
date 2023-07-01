@@ -1,7 +1,9 @@
 use std::fs::File;
 use std::io::Read;
+use std::vec;
 use csv::ReaderBuilder;
 
+#[derive(Clone)]
 pub struct Csv {
     pub lines: Vec<CsvRecord>,
 }
@@ -31,8 +33,24 @@ impl Csv {
         }
         Ok(res)
     }
+
+    pub fn without(&self, lines_to_remove: impl IntoIterator<Item = std::ops::Range<usize>>) -> Csv {
+        let mut bin = self.lines.clone();
+
+        for range in lines_to_remove {
+            let start = range.start;
+            let end = range.end.min(bin.len());
+
+            bin.drain(start..end);
+        }
+
+        Csv {
+            lines: bin,
+        }
+    }
 }
 
+#[derive(Clone)]
 pub struct CsvRecord {
     pub rows: Vec<String>,
 }
