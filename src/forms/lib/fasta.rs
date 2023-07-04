@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io;
 use std::io::{BufRead, BufReader};
-use crate::utils::btree::{integrate_counter_dictionaries};
+use crate::utils::btree::{integrate_u64_counter_dictionaries};
 
 
 pub struct Fasta {
@@ -93,7 +93,7 @@ impl Fasta {
         let mut res:BTreeMap<char,u64> = BTreeMap::new();
         for rec in &self.nucleotides{
             let split = rec.split();
-            res = integrate_counter_dictionaries(res,split);
+            res = integrate_u64_counter_dictionaries(res,split);
         }
         res
     }
