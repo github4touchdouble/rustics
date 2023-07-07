@@ -1,7 +1,8 @@
 use std::cmp::Ordering;
 use std::fs::File;
 use std::io::Read;
-use std::vec;
+use std::{fmt, vec};
+use std::fmt::Formatter;
 use csv::ReaderBuilder;
 
 #[derive(Clone)]
@@ -87,7 +88,10 @@ impl CsvRecord {
             rows: vec![],
         }
     }
+}
 
-
-
+impl fmt::Debug for CsvRecord{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", &self.rows)
+    }
 }
