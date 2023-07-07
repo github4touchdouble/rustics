@@ -4,7 +4,7 @@ use std::io;
 use std::io::{BufRead, BufReader};
 use crate::utils::btree::{integrate_u64_counter_dictionaries};
 
-
+#[derive(Clone)]
 pub struct Fasta {
     pub nucleotides: Vec<FastaRecord>,
 }
@@ -99,7 +99,7 @@ impl Fasta {
     }
 }
 
-
+#[derive(Clone)]
 pub struct FastaRecord {
     pub header: String,
     pub sequence: String,
